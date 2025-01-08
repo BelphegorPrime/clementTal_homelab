@@ -28,3 +28,6 @@ reboot
 touch /FOLDER/foobar
 rm /FOLDER/foobar
 ```
+
+# Firewall
+[doc](https://rdr-it.com/proxmox-utiliser-le-firewall-integre-pour-securiser-les-machines-virtuelles/)
