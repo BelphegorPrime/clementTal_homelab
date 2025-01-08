@@ -20,7 +20,7 @@ mount -a
 nano /etc/pve/lxc/LXC_ID.conf
 mp0: /mnt/MOUNT/FOLDER/,mp=/FOLDER
 ```
-On LXC
+On LXC (optional)
 ```
 groupadd -g 10000 lxc_shares
 usermod -aG lxc_shares root
