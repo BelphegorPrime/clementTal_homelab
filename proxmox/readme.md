@@ -95,7 +95,7 @@ Changer l'interface réseau par tun0
 
 # Wyoming
 
-folow:
+follow: [this guide](https://wirelessthings.io/index.php/2023/11/06/running-piper-and-whisper-for-home-assistant-on-proxmox-lxc-based/)
 
 ```
 # Piper
