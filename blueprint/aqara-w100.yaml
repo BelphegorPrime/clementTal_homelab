@@ -28,12 +28,12 @@ blueprint:
             - humidity
           multiple: false
     action_double_plus:
-      name: double +
+      name: double plus
       default: []
       selector:
         action: {}
     action_hold_plus:
-      name: hold +
+      name: hold plus
       default: []
       selector:
         action: {}
@@ -48,12 +48,12 @@ blueprint:
       selector:
         action: {}
     action_double_minus:
-      name: double -
+      name: double minus
       default: []
       selector:
         action: {}
     action_hold_minus:
-      name: hold -
+      name: hold minus
       default: []
       selector:
         action: {}
