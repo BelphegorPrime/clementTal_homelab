@@ -1,6 +1,6 @@
 blueprint:
-  name: Gestion de l'aqara w100
-  description: Affiche la température et l'humidité secondaire et gestion des bouttons
+  name: Aqara W100 zigbee2mqtt management 
+  description: Hassio climat control, external probe management and custom buttons action. for Zigbee2mqtt only.
   domain: automation
   input:
     device:
