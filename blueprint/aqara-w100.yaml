@@ -27,6 +27,22 @@ blueprint:
           device_class:
             - humidity
           multiple: false
+    temperature_sensor:
+      name: External Sensor for temperature
+      description: The external sensor to display temperature values from
+      selector:
+        entity:
+          device_class:
+            - temperature
+          multiple: false
+    thermostat:
+      name: thermostat to control
+      description: the thermostat device to contol (plus and minux button, single press)
+      selector:
+        entity:
+          domain:
+            - climate
+          multiple: false
     action_double_plus:
       name: double plus
       default: []
@@ -57,22 +73,6 @@ blueprint:
       default: []
       selector:
         action: {}
-    temperature_sensor:
-      name: External Sensor for temperature
-      description: The external sensor to display temperature values from
-      selector:
-        entity:
-          device_class:
-            - temperature
-          multiple: false
-    thermostat:
-      name: thermostat to control
-      description: the thermostat device to contol (plus and minux button, single press)
-      selector:
-        entity:
-          domain:
-            - climate
-          multiple: false
 mode: restart
 max_exceeded: silent
 trigger_variables:
