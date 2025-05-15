@@ -143,14 +143,14 @@ action:
                             target:
                               entity_id: "{{thermostat}}"
                       - conditions: "{{ trigger.payload == 'double_plus' }}"
-                        sequence: sequence: !input action_double_plus
+                        sequence: !input action_double_plus
                       - conditions: "{{ trigger.payload == 'double_center' }}"
-                        sequence: sequence: !input action_double_center
+                        sequence: !input action_double_center
                       - conditions: "{{ trigger.payload == 'double_minus' }}"
-                        sequence: sequence: !input action_double_minus
+                        sequence: !input action_double_minus
                       - conditions: "{{ trigger.payload == 'hold_plus' }}"
-                        sequence: sequence: !input action_hold_plus
+                        sequence: !input action_hold_plus
                       - conditions: "{{ trigger.payload == 'hold_center' }}"
-                        sequence: sequence: !input action_hold_center
+                        sequence: !input action_hold_center
                       - conditions: "{{ trigger.payload == 'hold_minus' }}"
-                        sequence: sequence: !input action_double_minus
+                        sequence: !input action_double_minus
