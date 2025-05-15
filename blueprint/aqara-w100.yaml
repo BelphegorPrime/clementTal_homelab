@@ -1,0 +1,156 @@
+blueprint:
+  name: Gestion de l'aqara w100
+  description: Affiche la température et l'humidité secondaire et gestion des bouttons
+  domain: automation
+  input:
+    device:
+      name: device
+      description: The Aqara W100 climate sensor to use
+      selector:
+        device:
+          filter:
+            - integration: mqtt
+              manufacturer: Aqara
+              model: Climate Sensor W100
+          multiple: false
+    base_topic:
+      name: Zigbee2MQTT Base mqtt topic
+      description:
+        The base topic configured in Zigbee2MQTT. If you haven't changed
+        this, leave the default here ("zigbee2mqtt")
+      default: zigbee2mqtt
+    humidity_sensor:
+      name: External Sensor for humidity
+      description: The external sensor to display humidity values from
+      selector:
+        entity:
+          device_class:
+            - humidity
+          multiple: false
+    action_double_plus:
+      name: double +
+      default: []
+      selector:
+        action: {}
+    action_hold_plus:
+      name: hold +
+      default: []
+      selector:
+        action: {}
+    action_double_center:
+      name: double center
+      default: []
+      selector:
+        action: {}
+    action_hold_center:
+      name: hold center
+      default: []
+      selector:
+        action: {}
+    action_double_minus:
+      name: double -
+      default: []
+      selector:
+        action: {}
+    action_hold_minus:
+      name: hold -
+      default: []
+      selector:
+        action: {}
+    temperature_sensor:
+      name: External Sensor for temperature
+      description: The external sensor to display temperature values from
+      selector:
+        entity:
+          device_class:
+            - temperature
+          multiple: false
+    thermostat:
+      name: thermostat to control
+      description: the thermostat device to contol (plus and minux button, single press)
+      selector:
+        entity:
+          domain:
+            - climate
+          multiple: false
+mode: restart
+max_exceeded: silent
+trigger_variables:
+  device: !input device
+  base_topic: !input base_topic
+  humidity_sensor: !input humidity_sensor
+  temperature_sensor: !input temperature_sensor
+  thermostat: !input thermostat
+
+variables:
+  device_name: "{{device_attr(device, 'name')}}"
+  device_topic: "{{ base_topic }}/{{ device_attr(device, 'name') }}/action"
+trigger:
+  - trigger: state
+    entity_id:
+      - !input humidity_sensor
+      - !input temperature_sensor
+    id: sensor
+  - trigger: mqtt
+    topic: "{{ base_topic }}/+/action"
+    id: buttons
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - sensor
+        sequence:
+          - action: number.set_value
+            target:
+              entity_id: number.{{ device_name | lower }}_external_humidity
+            data_template:
+              value: "{{states(humidity_sensor)}}"
+          - action: number.set_value
+            target:
+              entity_id: number.{{ device_name | lower }}_external_temperature
+            data_template:
+              value: "{{states(temperature_sensor)}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - buttons
+        sequence:
+          - choose:
+              - conditions:
+                  - "{{ trigger.payload != ''}}"
+                  - "{{ trigger.topic == device_topic }}"
+                sequence:
+                  - choose:
+                      - conditions: "{{ trigger.payload == 'single_plus' }}"
+                        sequence:
+                          - service: climate.set_temperature
+                            target:
+                              entity_id: "{{thermostat}}"
+                            data_template:
+                              temperature: "{{ state_attr(thermostat, 'temperature') + 0.5 }}"
+                      - conditions: "{{ trigger.payload == 'single_minus' }}"
+                        sequence:
+                          - service: climate.set_temperature
+                            target:
+                              entity_id: "{{thermostat}}"
+                            data_template:
+                              temperature: "{{ state_attr(thermostat, 'temperature') - 0.5 }}"
+                      - conditions: "{{ trigger.payload == 'single_center' }}"
+                        sequence:
+                          - service: climate.toggle
+                            target:
+                              entity_id: "{{thermostat}}"
+                      - conditions: "{{ trigger.payload == 'double_plus' }}"
+                        sequence: sequence: !input action_double_plus
+                      - conditions: "{{ trigger.payload == 'double_center' }}"
+                        sequence: sequence: !input action_double_center
+                      - conditions: "{{ trigger.payload == 'double_minus' }}"
+                        sequence: sequence: !input action_double_minus
+                      - conditions: "{{ trigger.payload == 'hold_plus' }}"
+                        sequence: sequence: !input action_hold_plus
+                      - conditions: "{{ trigger.payload == 'hold_center' }}"
+                        sequence: sequence: !input action_hold_center
+                      - conditions: "{{ trigger.payload == 'hold_minus' }}"
+                        sequence: sequence: !input action_double_minus
