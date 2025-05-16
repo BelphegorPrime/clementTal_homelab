@@ -105,7 +105,7 @@ action:
           - action: switch.turn_on
             target:
               entity_id: switch.{{ device_name | lower }}_display_off
-          -action: select.select_option
+          - action: select.select_option
             target:
               entity_id: select.{{ device_name | lower }}_sensor
             data:
