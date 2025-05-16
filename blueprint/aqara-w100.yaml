@@ -102,6 +102,9 @@ action:
             id:
               - sensor
         sequence:
+          - action: switch.turn_on
+            target:
+              entity_id: switch.{{ device_name | lower }}_display_off
           - action: number.set_value
             target:
               entity_id: number.{{ device_name | lower }}_external_humidity
