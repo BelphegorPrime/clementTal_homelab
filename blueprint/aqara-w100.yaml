@@ -83,7 +83,6 @@ trigger_variables:
   thermostat: !input thermostat
 
 variables:
-  device_name: "{{device_attr(device, 'name')}}"
   device_topic: "{{ base_topic }}/{{ device_attr(device, 'name') }}/action"
 trigger:
   - trigger: state
@@ -104,20 +103,20 @@ action:
         sequence:
           - action: switch.turn_on
             target:
-              entity_id: switch.{{ device_name | lower }}_display_off
+              entity_id: "{{ device_entities(device) | select('search', '_display_off$') | list | first }}"
           - action: select.select_option
             target:
-              entity_id: select.{{ device_name | lower }}_sensor
+              entity_id: "{{ device_entities(device) | select('search', '_sensor$') | list | first }}"
             data:
               option: "external"
           - action: number.set_value
             target:
-              entity_id: number.{{ device_name | lower }}_external_humidity
+              entity_id: {{ device_entities(device) | select('search', '_external_humidity$') | list | first }}"
             data_template:
               value: "{{states(humidity_sensor)}}"
           - action: number.set_value
             target:
-              entity_id: number.{{ device_name | lower }}_external_temperature
+              entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
             data_template:
               value: "{{states(temperature_sensor)}}"
       - conditions:
