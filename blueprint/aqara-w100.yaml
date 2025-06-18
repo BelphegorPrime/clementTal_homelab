@@ -139,7 +139,7 @@ action:
                               temperature: "{{ state_attr(thermostat, 'temperature') + 0.5 }}"
                           - action: number.set_value
                             target:
-                              entity_id: number.{{ device_name | lower }}_external_temperature
+                              entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
                             data_template:
                               value: "{{state_attr(thermostat, 'temperature')}}"
                           - delay:
@@ -149,7 +149,7 @@ action:
                               milliseconds: 0
                           - action: number.set_value
                             target:
-                              entity_id: number.{{ device_name | lower }}_external_temperature
+                              entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
                             data_template:
                               value: "{{states(temperature_sensor)}}"                              
                       - conditions: "{{ trigger.payload == 'single_minus' }}"
@@ -161,7 +161,7 @@ action:
                               temperature: "{{ state_attr(thermostat, 'temperature') - 0.5 }}"
                           - action: number.set_value
                             target:
-                              entity_id: number.{{ device_name | lower }}_external_temperature
+                              entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
                             data_template:
                               value: "{{state_attr(thermostat, 'temperature')}}"
                           - delay:
@@ -171,7 +171,7 @@ action:
                               milliseconds: 0
                           - action: number.set_value
                             target:
-                              entity_id: number.{{ device_name | lower }}_external_temperature
+                              entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
                             data_template:
                               value: "{{states(temperature_sensor)}}"                              
                       - conditions: "{{ trigger.payload == 'single_center' }}"
