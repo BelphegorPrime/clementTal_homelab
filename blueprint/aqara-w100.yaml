@@ -137,6 +137,21 @@ action:
                               entity_id: "{{thermostat}}"
                             data_template:
                               temperature: "{{ state_attr(thermostat, 'temperature') + 0.5 }}"
+                          - action: number.set_value
+                            target:
+                              entity_id: number.{{ device_name | lower }}_external_temperature
+                            data_template:
+                              value: "{{state_attr(thermostat, 'temperature')}}"
+                          - delay:
+                              hours: 0
+                              minutes: 0
+                              seconds: 2
+                              milliseconds: 0
+                          - action: number.set_value
+                            target:
+                              entity_id: number.{{ device_name | lower }}_external_temperature
+                            data_template:
+                              value: "{{states(temperature_sensor)}}"                              
                       - conditions: "{{ trigger.payload == 'single_minus' }}"
                         sequence:
                           - service: climate.set_temperature
@@ -144,6 +159,21 @@ action:
                               entity_id: "{{thermostat}}"
                             data_template:
                               temperature: "{{ state_attr(thermostat, 'temperature') - 0.5 }}"
+                          - action: number.set_value
+                            target:
+                              entity_id: number.{{ device_name | lower }}_external_temperature
+                            data_template:
+                              value: "{{state_attr(thermostat, 'temperature')}}"
+                          - delay:
+                              hours: 0
+                              minutes: 0
+                              seconds: 2
+                              milliseconds: 0
+                          - action: number.set_value
+                            target:
+                              entity_id: number.{{ device_name | lower }}_external_temperature
+                            data_template:
+                              value: "{{states(temperature_sensor)}}"                              
                       - conditions: "{{ trigger.payload == 'single_center' }}"
                         sequence:
                           - service: climate.toggle
