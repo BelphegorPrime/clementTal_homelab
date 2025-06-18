@@ -111,7 +111,7 @@ action:
               option: "external"
           - action: number.set_value
             target:
-              entity_id: {{ device_entities(device) | select('search', '_external_humidity$') | list | first }}"
+              entity_id: "{{ device_entities(device) | select('search', '_external_humidity$') | list | first }}"
             data_template:
               value: "{{states(humidity_sensor)}}"
           - action: number.set_value
