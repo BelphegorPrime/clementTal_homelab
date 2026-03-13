@@ -27,14 +27,6 @@ blueprint:
           device_class:
             - humidity
           multiple: false
-    temperature_sensor:
-      name: External Sensor for temperature
-      description: The external sensor to display temperature values from
-      selector:
-        entity:
-          device_class:
-            - temperature
-          multiple: false
     thermostat:
       name: thermostat to control
       description: the thermostat device to contol (plus and minux button, single press)
@@ -79,7 +71,6 @@ trigger_variables:
   device: !input device
   base_topic: !input base_topic
   humidity_sensor: !input humidity_sensor
-  temperature_sensor: !input temperature_sensor
   thermostat: !input thermostat
 
 variables:
@@ -88,7 +79,6 @@ trigger:
   - trigger: state
     entity_id:
       - !input humidity_sensor
-      - !input temperature_sensor
     id: sensor
   - trigger: mqtt
     topic: "{{ base_topic }}/+/action"
@@ -142,16 +132,6 @@ action:
                               entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
                             data_template:
                               value: "{{state_attr(thermostat, 'temperature')}}"
-                          - delay:
-                              hours: 0
-                              minutes: 0
-                              seconds: 2
-                              milliseconds: 0
-                          - action: number.set_value
-                            target:
-                              entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
-                            data_template:
-                              value: "{{states(temperature_sensor)}}"                              
                       - conditions: "{{ trigger.payload == 'single_minus' }}"
                         sequence:
                           - service: climate.set_temperature
@@ -164,16 +144,6 @@ action:
                               entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
                             data_template:
                               value: "{{state_attr(thermostat, 'temperature')}}"
-                          - delay:
-                              hours: 0
-                              minutes: 0
-                              seconds: 2
-                              milliseconds: 0
-                          - action: number.set_value
-                            target:
-                              entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
-                            data_template:
-                              value: "{{states(temperature_sensor)}}"                              
                       - conditions: "{{ trigger.payload == 'single_center' }}"
                         sequence:
                           - service: climate.toggle
