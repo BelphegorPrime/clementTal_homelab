@@ -79,6 +79,7 @@ trigger:
   - trigger: state
     entity_id:
       - !input humidity_sensor
+      - !input thermostat
     id: sensor
   - trigger: mqtt
     topic: "{{ base_topic }}/+/action"
@@ -99,16 +100,6 @@ action:
               entity_id: "{{ device_entities(device) | select('search', '_sensor$') | list | first }}"
             data:
               option: "external"
-          - action: number.set_value
-            target:
-              entity_id: "{{ device_entities(device) | select('search', '_external_humidity$') | list | first }}"
-            data_template:
-              value: "{{states(humidity_sensor)}}"
-          - action: number.set_value
-            target:
-              entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
-            data_template:
-              value: "{{states(temperature_sensor)}}"
       - conditions:
           - condition: trigger
             id:
@@ -127,11 +118,6 @@ action:
                               entity_id: "{{thermostat}}"
                             data_template:
                               temperature: "{{ state_attr(thermostat, 'temperature') + 0.5 }}"
-                          - action: number.set_value
-                            target:
-                              entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
-                            data_template:
-                              value: "{{state_attr(thermostat, 'temperature')}}"
                       - conditions: "{{ trigger.payload == 'single_minus' }}"
                         sequence:
                           - service: climate.set_temperature
@@ -139,11 +125,6 @@ action:
                               entity_id: "{{thermostat}}"
                             data_template:
                               temperature: "{{ state_attr(thermostat, 'temperature') - 0.5 }}"
-                          - action: number.set_value
-                            target:
-                              entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
-                            data_template:
-                              value: "{{state_attr(thermostat, 'temperature')}}"
                       - conditions: "{{ trigger.payload == 'single_center' }}"
                         sequence:
                           - service: climate.toggle
@@ -161,3 +142,9 @@ action:
                         sequence: !input action_hold_center
                       - conditions: "{{ trigger.payload == 'hold_minus' }}"
                         sequence: !input action_double_minus
+
+  - action: number.set_value
+    target:
+      entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
+    data_template:
+      value: "{{states(temperature_sensor)}}"
