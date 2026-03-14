@@ -79,6 +79,7 @@ trigger:
   - trigger: state
     entity_id:
       - !input humidity_sensor
+      - !input thermostat
     id: sensor
   - trigger: mqtt
     topic: "{{ base_topic }}/+/action"
@@ -90,7 +91,7 @@ action:
       entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
     data_template:
       value: "{{state_attr(thermostat, 'temperature')}}"
-      
+
   - action: number.set_value
     target:
       entity_id: "{{ device_entities(device) | select('search', '_external_humidity$') | list | first }}"
