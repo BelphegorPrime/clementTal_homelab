@@ -1,29 +1,29 @@
 blueprint:
   name: Simple Climate
-  description: Automatisation pour contrôler les préréglages du thermostat basé sur un calendrier personnalisé
+  description: Automation to control thermostat presets based on a custom schedule
   domain: automation
   input:
     thermostat_entity:
-      name: Entité du thermostat
-      description: Sélectionne le thermostat à contrôler
+      name: Thermostat entity
+      description: Select the thermostat to control
       selector:
         entity:
           domain: climate
     kill_switch:
-      name: Switch de délestage
-      description: Sélectionne le switch pour activer ou désactiver le délestage
+      name: Load shedding switch
+      description: Select the switch to enable or disable load shedding
       selector:
         entity:
           domain: switch
     schedule_entity:
-      name: Entité du calendrier
-      description: Sélectionne l'entité "schedule" à utiliser pour planifier le chauffage
+      name: Schedule entity
+      description: Select the "schedule" entity used to plan the heating
       selector:
         entity:
           domain: schedule
     preset_when_on:
-      name: Préréglage lorsque le calendrier est activé
-      description: Sélectionne le préréglage lorsque le calendrier est en position "on"
+      name: Preset when schedule is active
+      description: Select the preset when the schedule is in the "on" state
       selector:
         select:
           options:
@@ -33,8 +33,8 @@ blueprint:
             - 'away'
             - 'home'
     preset_when_off:
-      name: Préréglage lorsque le calendrier est désactivé
-      description: Sélectionne le préréglage lorsque le calendrier est en position "off"
+      name: Preset when schedule is inactive
+      description: Select the preset when the schedule is in the "off" state
       selector:
         select:
           options:
