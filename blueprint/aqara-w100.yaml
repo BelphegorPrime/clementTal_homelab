@@ -79,13 +79,18 @@ trigger:
   - trigger: state
     entity_id:
       - !input humidity_sensor
-      - !input thermostat
     id: sensor
   - trigger: mqtt
     topic: "{{ base_topic }}/+/action"
     id: buttons
 
 action:
+  - action: number.set_value
+    target:
+      entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
+    data_template:
+      value: "{{state_attr(thermostat, 'temperature')}}"
+
   - choose:
       - conditions:
           - condition: trigger
@@ -100,6 +105,11 @@ action:
               entity_id: "{{ device_entities(device) | select('search', '_sensor$') | list | first }}"
             data:
               option: "external"
+          - action: number.set_value
+            target:
+              entity_id: "{{ device_entities(device) | select('search', '_external_humidity$') | list | first }}"
+            data_template:
+              value: "{{states(humidity_sensor)}}"
       - conditions:
           - condition: trigger
             id:
@@ -147,4 +157,4 @@ action:
     target:
       entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
     data_template:
-      value: "{{states(temperature_sensor)}}"
+      value: "{{state_attr(thermostat, 'temperature')}}"
