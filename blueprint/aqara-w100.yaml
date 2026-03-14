@@ -90,6 +90,12 @@ action:
       entity_id: "{{ device_entities(device) | select('search', '_external_temperature$') | list | first }}"
     data_template:
       value: "{{state_attr(thermostat, 'temperature')}}"
+      
+  - action: number.set_value
+    target:
+      entity_id: "{{ device_entities(device) | select('search', '_external_humidity$') | list | first }}"
+    data_template:
+      value: "{{states(humidity_sensor)}}"
 
   - choose:
       - conditions:
@@ -105,11 +111,6 @@ action:
               entity_id: "{{ device_entities(device) | select('search', '_sensor$') | list | first }}"
             data:
               option: "external"
-          - action: number.set_value
-            target:
-              entity_id: "{{ device_entities(device) | select('search', '_external_humidity$') | list | first }}"
-            data_template:
-              value: "{{states(humidity_sensor)}}"
       - conditions:
           - condition: trigger
             id:
